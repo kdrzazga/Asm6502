@@ -1,9 +1,10 @@
-;runner_from_basic$080e
-
 *=$0801
 
-          WORD           $0a08 ;signature
-          WORD           $cafe ;line number 51966
+          WORD           $0d08 ;signature
+          WORD           $baca
+          BYTE           153, $20 ;print (space)
+          BYTE           199 ; CHR$ command
+          TEXT           "(14):"
           BYTE           $9e ;SYS command
-          text           "2062";DEC for $080e
+          TEXT           "2069"
           BYTE           $00

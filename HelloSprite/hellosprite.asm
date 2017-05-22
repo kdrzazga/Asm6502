@@ -1,7 +1,7 @@
 Incasm "runner_from_basic.asm"
 
 main
-*= 2062
+*= 2069
           jsr            set_colors
           jsr            CLRSCR_ROUTINE_PTR
           jsr            print_message     
@@ -120,7 +120,5 @@ COORD
           byte           $40             ; current x and y coordinate
 DIR
           byte           0               ; direction:0 = down-right, 1 =up-left
-
-
 
 Incasm "sprite_data.asm"

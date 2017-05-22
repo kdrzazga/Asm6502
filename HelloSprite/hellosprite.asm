@@ -1,7 +1,7 @@
 Incasm "runner_from_basic.asm"
 
 main
-*=$080e
+*= 2062
           jsr            set_colors
           jsr            CLRSCR_ROUTINE_PTR
           jsr            print_message     
@@ -10,15 +10,19 @@ main
 mainloop
           jsr            exit_if_key_X
           jsr            read_joy1_state
+          jsr            take_action_according_to_joy1_state
 
-          lda            JOY_OPERATION      
-          cmp            JOY1_NO_OPERATION
-          beq            open_mouth
-
-          lda            CLOSED_MOUTH_SPRITE_BLOCK_NUMBER
-          jmp            set_sprite
-open_mouth
+on_joy_up
+on_joy_down
+on_joy_left
+on_joy_right
+on_no_joy_operation
           lda            OPEN_MOUTH_SPRITE_BLOCK_NUMBER
+          jmp            set_sprite
+
+on_joy_fire
+          lda            CLOSED_MOUTH_SPRITE_BLOCK_NUMBER
+
 set_sprite
           sta            SPRITE1_PTR; set pointer: sprite data at $2000
 
@@ -48,7 +52,9 @@ down
           bne            mainloop  
           lda            UP_LEFT_DIR
           sta            DIR       
-          jmp            mainloop  
+          jmp            mainloop
+  
+Incasm "joystick.asm"
 
 MESSAGE
           text           "Hold Joy1 fire to open mouth            "
@@ -60,6 +66,8 @@ EXIT_KEY
 
 STRING_TERMINATION
           text           "$";don't repeat this char within the message
+
+
 
 print_message
           ldx            #$00      
@@ -93,7 +101,6 @@ exit_if_key_X
 exit
           brk
 
-
 ENABLED   = #$01
 DOWN_RIGHT_DIR = #$00
 UP_LEFT_DIR = #$01
@@ -112,8 +119,8 @@ MIN_COORD = #$e0
 COORD
           byte           $40             ; current x and y coordinate
 DIR
-          byte           0               ; direction: 0 = down-right, 1 = up-left
+          byte           0               ; direction:0 = down-right, 1 =up-left
 
-Incasm "joystick_lib.asm"
+
 
 Incasm "sprite_data.asm"

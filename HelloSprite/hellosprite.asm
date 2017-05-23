@@ -17,11 +17,11 @@ on_joy_down
 on_joy_left
 on_joy_right
 on_no_joy_operation
-          lda            OPEN_MOUTH_SPRITE_BLOCK_NUMBER
+          lda            CLOSED_MOUTH_SPRITE_BLOCK_NUMBER
           jmp            set_sprite
 
 on_joy_fire
-          lda            CLOSED_MOUTH_SPRITE_BLOCK_NUMBER
+          lda            OPEN_MOUTH_SPRITE_BLOCK_NUMBER
 
 set_sprite
           sta            SPRITE1_PTR; set pointer: sprite data at $2000

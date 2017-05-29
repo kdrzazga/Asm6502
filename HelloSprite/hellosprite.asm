@@ -3,12 +3,14 @@ Incasm "runner_from_basic.asm"
 main
 *= 2069
           jsr            set_colors
-          jsr            CLRSCR_ROUTINE_PTR
+          jsr            CLRSCR_ROUTINE_PTR          
           jsr            print_message     
-          jsr            enable_sprite                                
+          jsr            enable_sprite  
+          jsr            set_mine                                
 
 mainloop
           jsr            exit_if_key_X
+          jsr            check_sprite1_collision
           jsr            read_joy1_state
           jsr            take_action_according_to_joy1_state
 
@@ -53,45 +55,22 @@ down
           lda            UP_LEFT_DIR
           sta            DIR       
           jmp            mainloop
-  
-Incasm "joystick.asm"
-
-MESSAGE
-          text           "Hold Joy1 fire to open mouth            "
-          text           "Press "
-
-EXIT_KEY
-          text           "x"          
-          text           " to exit                         "
-
-STRING_TERMINATION
-          text           "$";don't repeat this char within the message
 
 
-
-print_message
-          ldx            #$00      
-loop      lda            MESSAGE,x
-          cmp            STRING_TERMINATION
-          beq            end_print 
-          and            #$3f      
-          sta            TXT_SCREEN_PTR,x
-          inx
-          jmp            loop      
-end_print
-          rts
-
-enable_sprite
-          lda            ENABLED   
-          sta            SPRITE_ENABLING_PTR; Turn sprite  on
-          lda            LIGHT_GRAY
-          sta            SPRITE_COLOR_PTR
-          lda            COORD     
-          sta            SPRITE_X_PTR
-          sta            SPRITE_Y_PTR
-          rts
-
+Incasm "joystick_lib.asm"
+Incasm "print_at.asm"
+Incasm "sprite.asm"
 Incasm "colors_lib.asm" 
+
+on_sprite1_bkgd_coll
+          lda            OPEN_MOUTH_SPRITE_BLOCK_NUMBER
+          jmp            set_sprite
+
+set_mine
+          lda           MINE
+          ldx           MINE_OFFSET
+          sta           TXT_SCREEN_BLOCK3,x
+          rts
 
 exit_if_key_X
           jsr            READKEY_ROUTINE_PTR
@@ -101,20 +80,19 @@ exit_if_key_X
 exit
           brk
 
-ENABLED   = #$01
+
 DOWN_RIGHT_DIR = #$00
 UP_LEFT_DIR = #$01
 CLRSCR_ROUTINE_PTR = $e544
 READKEY_ROUTINE_PTR = $ffe4
 
 RASTER_BEAM_PTR = $d012
-SPRITE_ENABLING_PTR = $d015
-SPRITE_COLOR_PTR = $d027
-SPRITE_X_PTR = $d000
-SPRITE_Y_PTR = SPRITE_X_PTR +1
-SPRITE1_PTR= $07f8
+
 MAX_COORD = #$40
 MIN_COORD = #$e0
+
+MINE     text "_"
+MINE_OFFSET     byte 16
 
 COORD
           byte           $40             ; current x and y coordinate

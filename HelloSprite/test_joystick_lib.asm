@@ -1,4 +1,4 @@
-Incasm "runner_from_basic.asm"
+ Incasm "ru nner_from_basic.asm"
 
 main
 *=2069

@@ -1,10 +1,11 @@
 //for KickAssembler
-BasicUpstart2(mainProg)
+BasicUpstart2(initProg)
 
 .const GETIN  =  $ffe4
 .const SCNKEY =  $ff9f
 .const SOFT_RESET = $fce2
 .const SPACE = 32
+.const CLRSCR = $ff81
 	
 .const textMemoryBank = $0400
 .const screenControlRegister = $d016
@@ -15,12 +16,13 @@ BasicUpstart2(mainProg)
 .const scrollLine = 24 * textLineWidth + textMemoryBank
 .const memorySetup = %00010111 //Bits #0-#2: Horizontal raster scroll. #3: Screen width; 0 = 38 columns; 1 = 40 columns. #4: 1 = Multicolor mode on.
 .const horizontalScroll = $c8
-.const rasterLineForScroll = $ff - 13 //Raster line to generate interrupt at (bits #0-#7) - last textline of screen
+.const rasterLineForScroll = $ff - 255 //Raster line to generate interrupt at (bits #0-#7) - last textline of screen
 
 //Changing raster to narrow bottom of the screen allows for smooth scrolling 13 is the height of single textline
 .const finalRasterLine = $ff //Raster line to generate interrupt, ff = full screen
 
 			*=$825
+initProg:   jsr CLRSCR
 mainProg: 	{
 			sei
 			lda #memorySetup
@@ -32,7 +34,7 @@ mainLoop:
 			cmp rasterLineCell
 			bne mainLoop
 			jsr SCROLL
-			
+
 			// Wait for line $ff (finalRasterLine) and prepare next frame 
 loop2:		lda #finalRasterLine
 			cmp rasterLineCell
@@ -81,8 +83,7 @@ count:		ldx #0
 over1:		stx count + 1
 			
 exit:		rts
-			
-readFirst		
+				
 quit:
 	jmp SOFT_RESET			
 	

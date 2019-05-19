@@ -1,5 +1,5 @@
 //Kick Assembler
-BasicUpstart2(start)
+//BasicUpstart2(start)
 
 .const InterruptStatusRegister1 = $d019
 .const InterruptStatusRegister2 = $d01a
@@ -10,7 +10,7 @@ BasicUpstart2(start)
 .const ProcessorPort = $0001
 
 			* = $0960
-start:		lda #$00
+music:		lda #$00
 			jsr music_init
 			sei
 			lda #%00110101
@@ -32,7 +32,8 @@ start:		lda #$00
 			sta InterruptStatusRegister1
 
 			cli
-			jmp *
+			//jmp *
+			rts
 
 irq1:  		pha
 			txa
